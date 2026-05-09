@@ -1,0 +1,88 @@
+/* Custom Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+  --gold: #c9a96e;
+  --gold-light: #e8d5b0;
+  --dark: #111111;
+  --white: #f5f0eb;
+  --muted: #888888;
+}
+
+/* Base Styles */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--dark);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* Heading Overrides */
+h1, h2, h3, h4, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--gold); }
+
+/* Global Utilities */
+.letter-spacing-2 { letter-spacing: 2px; }
+.letter-spacing-5 { letter-spacing: 5px; }
+
+.transition-all {
+  transition: all 0.4s ease-in-out;
+}
+
+/* Gold Button Hover Effect */
+.btn-outline-gold {
+  color: var(--gold);
+  border: 1px solid rgba(201, 169, 110, 0.5);
+  border-radius: 0; /* Square edges for luxury look */
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  padding: 12px 35px;
+  transition: all 0.3s;
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--gold) !important;
+  color: #0d0d0d !important;
+  border-color: var(--gold) !important;
+}
+
+/* Navbar specific fixes */
+.navbar-toggler:focus {
+  box-shadow: none; /* Removes the blue Bootstrap outline on mobile */
+}
+
+/* Responsive Image Heights */
+.about-img {
+  height: 580px;
+  object-fit: cover;
+}
+
+@media (max-width: 991px) {
+  .about-img {
+    height: 400px;
+  }
+}
+
+/* Custom Placeholder Color */
+::placeholder { 
+  color: rgba(255, 255, 255, 0.25) !important; 
+  font-size: 0.78rem; 
+}
+
+/* Date input styling */
+input[type="date"] {
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) sepia(1) saturate(2) hue-rotate(5deg);
+  cursor: pointer;
+}
