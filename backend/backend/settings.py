@@ -131,3 +131,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ]
 }
+
+
+CSP_FRAME_SRC = ("'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com")

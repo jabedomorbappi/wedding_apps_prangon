@@ -86,3 +86,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.6) sepia(1) saturate(2) hue-rotate(5deg);
   cursor: pointer;
 }
+
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+.active-zoom {
+  animation: slowZoom 6s ease-out forwards;
+}
+
+
+/* index.css or App.css */
+
+.main-wrapper {
+  overflow-x: hidden;
+  background-color: #000;
+}
+
+/* We don't hide them with CSS 'display: none', just opacity */
+.reveal-section {
+  opacity: 0; 
+  will-change: transform, opacity;
+}
+
+/* Ensure the Hero is visible enough for the GSAP from() to start */
+.hero-entrance {
+  width: 100%;
+  position: relative;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+.video-player-container {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background: #000;
+}
+
+.video-wrapper {
+  background-color: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+.video-wrapper:hover {
+  transform: scale(1.01);
+}

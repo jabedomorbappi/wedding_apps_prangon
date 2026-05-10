@@ -1,25 +1,19 @@
 // frontend/src/components/Layout.jsx
-import React from 'react';
-import Navbar from './Navbar'; // Adjust paths based on your file names
+import Navbar from './Navbar';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
   return (
-    <>
-      {/* Navbar stays at the top of every page */}
+    <div className="site-container">
       <Navbar />
-
-      {/* 
-          This 'main' tag ensures the background is consistent 
-          and the footer stays at the bottom even on short pages 
-      */}
-      <main style={{ minHeight: '80vh', background: '#080808' }}>
+      
+      {/* The 'children' here is the Home component */}
+      <main className="content-area">
         {children}
       </main>
 
-      {/* Footer stays at the bottom of every page */}
-      <Footer />
-    </>
+      <Footer /> {/* THIS MUST BE HERE */}
+    </div>
   );
 };
 

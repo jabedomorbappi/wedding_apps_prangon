@@ -1,37 +1,59 @@
-// frontend/src/components/Hero.jsx
 import { useState, useEffect } from 'react';
 
-const sliderImages = [
-  'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000',
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=2000',
-  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=2000',
-  'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=2000'
-];
-
 function Hero() {
+  const [images, setImages] = useState([]); 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
+  const [direction, setDirection] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "Jolchobi | Capturing Your Forever";
+    
+    const fetchHeroData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/hero-slider/');
+        const data = await response.json();
+        
+        // Ensure we extract just the 'image' string from each object
+        const urls = data.map(item => item.image);
+        console.log("Fetched image URLs:", urls); // Check your console!
+        
+        setImages(urls);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch hero images:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchHeroData();
+  }, []);
+
+  // Timer logic for sliding
+  useEffect(() => {
+    if (images.length === 0) return;
+
     const timer = setInterval(() => {
       setCurrentIndex((prev) => {
-        // If we reach the last image, switch to backward direction
-        if (prev === sliderImages.length - 1 && direction === 1) {
+        if (prev === images.length - 1 && direction === 1) {
           setDirection(-1);
           return prev - 1;
         }
-        // If we reach the first image, switch to forward direction
         if (prev === 0 && direction === -1) {
           setDirection(1);
           return prev + 1;
         }
-        // Otherwise, continue in the current direction
         return prev + direction;
       });
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [direction]);
+  }, [direction, images.length]);
+
+  // Prevent rendering if images aren't ready
+  if (loading || images.length === 0) {
+    return <section id="home" style={{ height: '100vh', background: '#000' }} />;
+  }
 
   return (
     <section id="home" style={{
@@ -39,7 +61,7 @@ function Hero() {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      justifyContent: 'flex-start', 
       alignItems: 'center',
       textAlign: 'center',
       position: 'relative',
@@ -47,122 +69,88 @@ function Hero() {
       background: '#000',
     }}>
 
-      {/* 1. The Sliding Track */}
+      {/* The Sliding Track */}
       <div style={{
         position: 'absolute',
         top: 0,
-        left: 0,
-        width: `${sliderImages.length * 100}%`, // Makes the track wide enough for all images
-        height: '100%',
+        left: '2%',
+        width: `${images.length * 96}%`, 
+        height: '95%',
+        marginTop: '150px',
         display: 'flex',
-        // This moves the entire track based on the currentIndex
-        transform: `translateX(-${(currentIndex * 100) / sliderImages.length}%)`,
+        // Dynamic transform based on the loaded images array
+        transform: `translateX(-${(currentIndex * 100) / images.length}%)`,
         transition: 'transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1.000)',
-        zIndex: 1
+        zIndex: 1,
       }}>
-        {sliderImages.map((img, index) => (
-          <div
-            key={index}
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${img})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        ))}
+        {images.map((img, index) => {
+          const isActive = index === currentIndex;
+          return (
+            <div
+              key={index}
+              style={{
+                width: '100%',
+                height: '100%',
+                padding: '0 10px',      
+                position: 'relative',
+                overflow: 'hidden',     
+                borderRadius: '25px',   
+              }}
+            >
+              <div
+                className={isActive ? 'active-zoom' : ''}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  // CRITICAL: We wrap the URL in quotes to handle special characters
+                  backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("${img}")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  borderRadius: '25px',
+                  transform: isActive ? 'scale(1.1)' : 'scale(1)',
+                  transition: 'transform 5s linear',
+                  willChange: 'transform'
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
 
-      {/* 2. Decorative Circles (zIndex 2) */}
-      <div style={{
-        position: 'absolute',
-        width: 'min(600px, 90vw)', height: 'min(600px, 90vw)',
-        border: '1px solid rgba(201,169,110,0.15)',
-        borderRadius: '50%',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 2,
-        pointerEvents: 'none'
-      }} />
-
-      {/* 3. Text Content (zIndex 3) */}
-      <div style={{ position: 'relative', zIndex: 3 }}>
-        <p style={{
-          fontSize: '0.75rem',
-          letterSpacing: '6px',
-          color: '#c9a96e',
-          textTransform: 'uppercase',
-          marginBottom: '24px',
-        }}>
-          Wedding Photography
-        </p>
-
+      {/* Hero Content Overlay */}
+      <div style={{ position: 'relative', zIndex: 3, paddingTop: '220px' }}>
         <h1 style={{
           fontSize: 'clamp(2.5rem, 8vw, 6rem)',
           fontFamily: 'Cormorant Garamond, serif',
-          fontWeight: 300,
-          lineHeight: 1.1,
-          letterSpacing: '4px',
           color: '#f5f0eb',
           marginBottom: '24px',
         }}>
           Capturing Your<br />
           <span style={{ color: '#c9a96e', fontStyle: 'italic' }}>Forever</span>
         </h1>
-
-        <div style={{ width: '60px', height: '1px', background: '#c9a96e', margin: '0 auto 24px' }} />
-
-        <p style={{
-          fontSize: '0.85rem',
-          letterSpacing: '2px',
-          color: '#e0e0e0',
-          marginBottom: '48px',
-          maxWidth: '400px',
-          margin: '0 auto 48px',
-          lineHeight: 1.8,
+        
+        <a href="#packages" className="btn" style={{
+          padding: '14px 30px',
+          background: '#c9a96e',
+          color: '#0d0d0d',
+          textDecoration: 'none',
+          fontSize: '0.7rem',
+          fontWeight: 600,
+          textTransform: 'uppercase'
         }}>
-          Timeless stories told through light, emotion & artistry
-        </p>
-
-        <div className="d-flex gap-3 justify-content-center">
-          <a href="#packages" className="btn" style={{
-            padding: '14px 30px',
-            background: '#c9a96e',
-            color: '#0d0d0d',
-            textDecoration: 'none',
-            fontSize: '0.7rem',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-            transition: '0.3s'
-          }}>
-            View Packages
-          </a>
-          <a href="#gallery" className="btn" style={{
-            padding: '14px 30px',
-            border: '1px solid rgba(201,169,110,0.5)',
-            color: '#c9a96e',
-            textDecoration: 'none',
-            fontSize: '0.7rem',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            transition: '0.3s'
-          }}>
-            Our Work
-          </a>
-        </div>
+          View Packages
+        </a>
       </div>
 
-      {/* 4. Indicators */}
+      {/* Dynamic Indicators */}
       <div style={{
         position: 'absolute',
-        bottom: '40px',
+        bottom: '60px',
         display: 'flex',
         gap: '12px',
         zIndex: 4
       }}>
-        {sliderImages.map((_, i) => (
+        {images.map((_, i) => (
           <div
             key={i}
             onClick={() => setCurrentIndex(i)}

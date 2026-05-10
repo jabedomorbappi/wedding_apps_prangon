@@ -1,0 +1,85 @@
+/* Navbar.css */
+
+.custom-dream-nav {
+    width: 92% !important;
+    max-width: 1400px;
+    height: 100px;             /* Luxury height */
+    margin: 30px auto !important; /* Floating gap from top and sides */
+    left: 0;
+    right: 0;
+    
+    position: fixed;
+    top: 0;
+    z-index: 1100;
+    
+    /* Dark Glassmorphism */
+    background: rgba(10, 10, 10, 0.55) !important; 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    border-radius: 30px;       /* Rounded edges as seen in your screenshots */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    
+    display: flex;
+    align-items: center;
+    padding: 0 40px !important;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-scrolled {
+    height: 80px;              /* Becomes sleeker as you scroll */
+    margin-top: 15px !important;
+    background: rgba(5, 5, 5, 0.9) !important;
+    border: 1px solid rgba(201, 169, 110, 0.3) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.dream-logo {
+    height: 65px;              /* Vertical alignment fix */
+    width: auto;
+    object-fit: contain;
+}
+
+.dream-link {
+    color: #f5f0eb !important; 
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+}
+
+.dream-link:hover {
+    color: #c9a96e !important; /* Gold hover color */
+    transform: translateY(-2px);
+}
+
+/* Hamburger Icon for Mobile */
+.navbar-toggler-icon {
+    filter: invert(1);
+}
+
+@media (max-width: 991px) {
+    .custom-dream-nav {
+        height: 75px;
+        width: 95% !important;
+        margin: 15px auto !important;
+        padding: 0 20px !important;
+    }
+}
+
+/* This ensures that when you click a link, the section starts BELOW the nav */
+section {
+    scroll-margin-top: 100px; /* Adjust this to match your navbar height */
+}
+
+/* Ensure the fixed navbar doesn't have an accidental white border or overflow */
+.custom-dream-nav {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    /* Optional: adds a slight blur for a premium feel */
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.9) !important;
+}
